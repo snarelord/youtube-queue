@@ -5,9 +5,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  color: black;
+  font-family: Roboto, Arial, sans-serif;
+  background-color: #0f0f0f;
+  color: #ffffff;
   width: 350px;
   min-height: 400px;
   overflow: hidden;
@@ -16,91 +16,137 @@ body {
 .container {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  gap: 20px;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+  gap: 16px;
 }
 
-/* Header section with buttons */
+/* Button styles matching YouTube */
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
 }
 
 .addButton,
 .skipButton,
 .clearButton {
-  background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
-  border: 1px solid #404040;
-  border-radius: 12px;
+  background-color: #272727;
+  border: none;
+  border-radius: 18px;
   color: #ffffff;
-  font-family: inherit;
+  font-family: Roboto, Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
-  padding: 14px 20px;
+  padding: 10px 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
+  transition: background-color 0.2s;
   text-align: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.addButton::before,
-.skipButton::before,
-.clearButton::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s ease;
-}
-
-.addButton:hover::before,
-.skipButton:hover::before,
-.clearButton:hover::before {
-  left: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
 }
 
 .addButton:hover,
 .skipButton:hover,
 .clearButton:hover {
-  background: linear-gradient(135deg, #404040 0%, #2a2a2a 100%);
-  border-color: #555555;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background-color: #3f3f3f;
 }
 
 .addButton:active,
 .skipButton:active,
 .clearButton:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  background-color: #525252;
 }
 
+/* YouTube red accent for add button */
 .addButton {
-  background: linear-gradient(135deg, #2d5a2d 0%, #1a3d1a 100%);
-  border-color: #4a7c4a;
+  background-color: #cc0000;
 }
 
 .addButton:hover {
-  background: linear-gradient(135deg, #3d6a3d 0%, #2a4d2a 100%);
-  border-color: #5a8c5a;
+  background-color: #ff0000;
 }
 
-.clearButton {
-  background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%);
-  border-color: #7c4a4a;
+.addButton:active {
+  background-color: #aa0000;
 }
 
-.clearButton:hover {
-  background: linear-gradient(135deg, #6a3d3d 0%, #4d2a2a 100%);
-  border-color: #8c5a5a;
+.playPauseButton {
+  background-color: #272727;
+  border: none;
+  border-radius: 18px;
+  color: #ffffff;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  gap: 8px;
+}
+
+.playPauseButton:hover {
+  background-color: #3f3f3f;
+}
+
+.playPauseButton:active {
+  background-color: #525252;
+}
+
+.playPauseButton.playing {
+  background-color: #cc0000;
+}
+
+.playPauseButton.playing:hover {
+  background-color: #ff0000;
+}
+
+.playPauseButton.playing:active {
+  background-color: #aa0000;
+}
+
+/* Play/Pause icon */
+.play-icon,
+.pause-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.play-icon::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 8px solid currentColor;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  display: block;
+  margin-left: 2px;
+}
+
+.pause-icon::before {
+  content: "";
+  width: 8px;
+  height: 12px;
+  background: linear-gradient(
+    to right,
+    currentColor 0%,
+    currentColor 30%,
+    transparent 30%,
+    transparent 70%,
+    currentColor 70%,
+    currentColor 100%
+  );
+  display: block;
 }
 
 /* Queue section */
@@ -108,44 +154,101 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: lightgray;
-  border: 1px solid #404040;
+  background-color: #212121;
   border-radius: 12px;
-  padding: 16px;
-  backdrop-filter: blur(10px);
+  padding: 12px;
   min-height: 200px;
+  overflow-y: auto;
 }
 
 .queueTitle {
   font-size: 16px;
-  font-weight: 600;
-  color: black;
+  font-weight: 500;
+  color: #ffffff;
   margin-bottom: 12px;
-  text-align: center;
-  list-style: none;
   padding-bottom: 8px;
-  border-bottom: 1px solid #404040;
+  border-bottom: 1px solid #383838;
+  list-style: none;
+  text-align: left;
 }
 
-/* Queue items (for when you add them) */
+/* Queue items styling like YouTube video items */
 .queue-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #333333;
+  display: flex;
+  padding: 8px;
   border-radius: 8px;
-  padding: 12px;
   margin-bottom: 8px;
-  transition: all 0.2s ease;
+  background-color: #212121;
+  transition: background-color 0.2s;
   cursor: pointer;
+  position: relative;
 }
 
 .queue-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #555555;
-  transform: translateX(4px);
+  background-color: #303030;
 }
 
-.queue-item:last-child {
-  margin-bottom: 0;
+.queue-item-thumbnail {
+  width: 100px;
+  height: 56px;
+  background-color: #181818;
+  border-radius: 8px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.queue-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.queue-item-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.queue-item-channel {
+  font-size: 12px;
+  color: #aaaaaa;
+}
+
+/* Remove button (x) */
+.queue-item-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.queue-item:hover .queue-item-remove {
+  opacity: 1;
+}
+
+.queue-item-remove:hover {
+  background-color: rgba(255, 0, 0, 0.8);
 }
 
 /* Empty state */
@@ -155,43 +258,96 @@ body {
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: #888888;
+  color: #aaaaaa;
   font-size: 14px;
   text-align: center;
   gap: 8px;
 }
 
-/* Scrollbar styling */
-.queue::-webkit-scrollbar {
-  width: 6px;
+.queue-empty::before {
+  content: "";
+  width: 40px;
+  height: 40px;
+  background-color: #303030;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23aaaaaa'%3E%3Cpath d='M14.97 16.95L10 13.87V7h2v5.76l4.03 2.49-1.06 1.7zM12 3c-4.96 0-9 4.04-9 9s4.04 9 9 9 9-4.04 9-9-4.04-9-9-9m0-1c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px;
 }
 
-.queue::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
+/* YouTube-style scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.queue::-webkit-scrollbar-thumb {
-  background: #404040;
-  border-radius: 3px;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.queue::-webkit-scrollbar-thumb:hover {
-  background: #555555;
+::-webkit-scrollbar-thumb {
+  background: #717171;
+  border-radius: 4px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 300px) {
-  .container {
-    padding: 16px;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+}
 
-  .addButton,
-  .skipButton,
-  .clearButton {
-    font-size: 13px;
-    padding: 12px 16px;
-  }
+/* Now playing indicator */
+.queue-item.now-playing {
+  background-color: #383838;
+  border-left: 3px solid #cc0000;
+}
+
+.queue-item.now-playing .queue-item-title::before {
+  content: "Now playing";
+  display: block;
+  font-size: 10px;
+  font-weight: normal;
+  color: #cc0000;
+  margin-bottom: 2px;
+}
+
+/* Duration badge */
+.queue-item-duration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+/* Drag handle */
+.queue-item-drag {
+  width: 16px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  margin-right: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.queue-item:hover .queue-item-drag {
+  opacity: 0.7;
+}
+
+.queue-item-drag::before {
+  content: "⋮⋮";
+  color: #aaaaaa;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.queue-item-drag:hover {
+  opacity: 1;
 }
 
 /* Animation for queue updates */

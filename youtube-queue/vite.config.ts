@@ -4,15 +4,16 @@ import path from "path";
 
 export default defineConfig({
   define: {
-    "process.env.NODE_ENV": JSON.stringify("production"), // ← FIX HERE
+    "process.env.NODE_ENV": JSON.stringify("production"),
   },
   build: {
     outDir: "dist",
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         popup: path.resolve(__dirname, "src/popup.html"),
-        content: path.resolve(__dirname, "src/content.ts"),
         background: path.resolve(__dirname, "src/background.ts"),
+        content: path.resolve(__dirname, "src/content.ts"),
       },
       output: {
         entryFileNames: "assets/[name].js",
