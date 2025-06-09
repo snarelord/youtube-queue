@@ -10,7 +10,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "add-to-queue" && info.linkUrl?.includes("youtube.com/watch")) {
     const url = info.linkUrl;
 
-    // Open the video in a *background tab* (not active)
     chrome.tabs.create({ url, active: false }, (newTab) => {
       if (!newTab?.id) return;
 
@@ -37,7 +36,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 });
 
-// Util to fetch the video title
 async function getYouTubeTitle(url: string): Promise<string> {
   try {
     const response = await fetch(url);

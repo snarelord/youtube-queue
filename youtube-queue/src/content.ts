@@ -1,25 +1,32 @@
 function checkIfVideoEnded() {
-  const video = document.querySelector("video");
-  if (!video) return;
-  console.log("Video element found:", video);
+  const waitForVideo = setInterval(() => {
+    const video = document.querySelector("video") as HTMLVideoElement | null;
+    if (video) {
+      console.log("Video element found");
+      clearInterval(waitForVideo);
 
-  video.addEventListener("ended", () => {
-    chrome.storage.local.get(["queue"], (data) => {
-      const queue: { url: string; title: string }[] = data.queue || [];
-      const [current, ...rest] = queue;
-      console.log("Queue:", queue);
+      video.addEventListener("ended", () => {
+        console.log("Video ended. Moving to next in queue...");
 
-      if (rest.length > 0) {
-        chrome.storage.local.set({ queue: rest }, () => {
-          window.location.href = rest[0].url;
+        chrome.storage.local.get(["queue"], (data) => {
+          const queue: { url: string; title: string }[] = data.queue || [];
+          const [current, ...rest] = queue;
+
+          if (rest.length > 0) {
+            chrome.storage.local.set({ queue: rest }, () => {
+              window.location.href = rest[0].url;
+            });
+          } else {
+            chrome.storage.local.set({ queue: [] });
+            alert("Queue finished!");
+          }
         });
-      } else {
-        chrome.storage.local.set({ queue: [] });
-        alert("Queue finished!");
-      }
-    });
-  });
+      });
+    }
+  }, 1000);
 }
+
+window.addEventListener("DOMContentLoaded", checkIfVideoEnded);
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "getTitle") {

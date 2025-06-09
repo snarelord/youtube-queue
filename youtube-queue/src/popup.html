@@ -3,20 +3,29 @@
   <head>
     <title>YouTube Queue</title>
     <link rel="stylesheet" href="popup.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   </head>
-  <body class="container">
-    <div class="buttons">
-      <button class="addButton" id="add">Add Current Video</button>
-      <button class="skipButton" id="skip">Skip</button>
-      <button class="clearButton" id="clear">Clear Queue</button>
-    </div>
-    <div class="queue" id="queue">
-      <div class="queueTitle" id="queue-title">Queue</div>
-      <div class="queue-empty" id="queue-empty">
-        <span>No videos in queue</span>
-        <small>Add videos to get started</small>
+  <body>
+    <div class="container">
+      <div class="buttons">
+        <button class="addButton" id="add">Add to queue</button>
+        <button class="playPauseButton" id="playPauseButton">
+          <span class="play-icon" id="playIcon"></span>
+          <span id="playPauseText">Play</span>
+        </button>
+        <button class="skipButton" id="skip">Skip</button>
+        <button class="clearButton" id="clear">Clear</button>
       </div>
-      <!-- Queue items will be dynamically added here -->
+      <div class="queue" id="queue">
+        <div class="queueTitle">Queue</div>
+        <div id="queue-items">
+          <!-- Queue items will be dynamically added here -->
+          <div class="queue-empty" id="queue-empty">
+            <span>No videos in queue</span>
+            <small>Add videos to get started</small>
+          </div>
+        </div>
+      </div>
     </div>
     <script type="module" src="/src/popup.ts"></script>
   </body>
