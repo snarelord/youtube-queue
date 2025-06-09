@@ -1,0 +1,211 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: black;
+  width: 350px;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+}
+
+/* Header section with buttons */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.addButton,
+.skipButton,
+.clearButton {
+  background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+  border: 1px solid #404040;
+  border-radius: 12px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.addButton::before,
+.skipButton::before,
+.clearButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.addButton:hover::before,
+.skipButton:hover::before,
+.clearButton:hover::before {
+  left: 100%;
+}
+
+.addButton:hover,
+.skipButton:hover,
+.clearButton:hover {
+  background: linear-gradient(135deg, #404040 0%, #2a2a2a 100%);
+  border-color: #555555;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.addButton:active,
+.skipButton:active,
+.clearButton:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.addButton {
+  background: linear-gradient(135deg, #2d5a2d 0%, #1a3d1a 100%);
+  border-color: #4a7c4a;
+}
+
+.addButton:hover {
+  background: linear-gradient(135deg, #3d6a3d 0%, #2a4d2a 100%);
+  border-color: #5a8c5a;
+}
+
+.clearButton {
+  background: linear-gradient(135deg, #5a2d2d 0%, #3d1a1a 100%);
+  border-color: #7c4a4a;
+}
+
+.clearButton:hover {
+  background: linear-gradient(135deg, #6a3d3d 0%, #4d2a2a 100%);
+  border-color: #8c5a5a;
+}
+
+/* Queue section */
+.queue {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: lightgray;
+  border: 1px solid #404040;
+  border-radius: 12px;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+  min-height: 200px;
+}
+
+.queueTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 12px;
+  text-align: center;
+  list-style: none;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #404040;
+}
+
+/* Queue items (for when you add them) */
+.queue-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #333333;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.queue-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #555555;
+  transform: translateX(4px);
+}
+
+.queue-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Empty state */
+.queue-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: #888888;
+  font-size: 14px;
+  text-align: center;
+  gap: 8px;
+}
+
+/* Scrollbar styling */
+.queue::-webkit-scrollbar {
+  width: 6px;
+}
+
+.queue::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.queue::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 3px;
+}
+
+.queue::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 300px) {
+  .container {
+    padding: 16px;
+  }
+
+  .addButton,
+  .skipButton,
+  .clearButton {
+    font-size: 13px;
+    padding: 12px 16px;
+  }
+}
+
+/* Animation for queue updates */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.queue-item-new {
+  animation: slideIn 0.3s ease;
+}

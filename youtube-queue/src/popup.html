@@ -2,18 +2,22 @@
 <html>
   <head>
     <title>YouTube Queue</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        padding: 10px;
-      }
-    </style>
+    <link rel="stylesheet" href="popup.css" />
   </head>
-  <body>
-    <button id="add">Add Current Video</button>
-    <button id="skip">Skip</button>
-    <button id="clear">Clear Queue</button>
-    <ul id="queue"></ul>
+  <body class="container">
+    <div class="buttons">
+      <button class="addButton" id="add">Add Current Video</button>
+      <button class="skipButton" id="skip">Skip</button>
+      <button class="clearButton" id="clear">Clear Queue</button>
+    </div>
+    <div class="queue" id="queue">
+      <div class="queueTitle" id="queue-title">Queue</div>
+      <div class="queue-empty" id="queue-empty">
+        <span>No videos in queue</span>
+        <small>Add videos to get started</small>
+      </div>
+      <!-- Queue items will be dynamically added here -->
+    </div>
     <script type="module" src="/src/popup.ts"></script>
   </body>
 </html>

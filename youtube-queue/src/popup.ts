@@ -5,62 +5,65 @@ const clearButton = document.getElementById("clear") as HTMLButtonElement;
 const queueList = document.getElementById("queue") as HTMLUListElement;
 const skipButton = document.getElementById("skip") as HTMLButtonElement;
 
-addButton?.addEventListener("click", () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0]?.url || "";
-    if (url.includes("youtube.com/watch")) {
-      chrome.storage.local.get(["queue"], (data) => {
-        const queue: string[] = data.queue || [];
-        if (!queue.includes(url)) {
-          chrome.storage.local.set({ queue: [...queue, url] }, async () => {
-            await renderQueue([...queue, url]);
-          });
-        }
-      });
-    }
+addButton.onclick = async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const url = tab.url;
+  if (!url?.includes("youtube.com/watch")) return;
+
+  chrome.storage.local.get(["queue"], async (data) => {
+    const queue: { url: string; title: string }[] = data.queue || [];
+    if (queue.some((item) => item.url === url)) return;
+    const title = await getYouTubeTitle(url);
+    const newItem = { url, title };
+    const updatedQueue = [...queue, newItem];
+    chrome.storage.local.set({ queue: updatedQueue }, () => renderQueue(updatedQueue));
   });
-});
+};
 
 clearButton?.addEventListener("click", () => {
-  chrome.storage.local.set({ queue: [] }, async () => {
-    await renderQueue([]);
-  });
+  chrome.storage.local.set({ queue: [] }, () => renderQueue([]));
 });
 
-async function renderQueue(queue: string[]) {
+function renderQueue(queue: { url: string; title: string }[]) {
   queueList.innerHTML = "";
 
-  for (const url of queue) {
-    const title = await getYouTubeTitle(url);
+  queue.forEach(({ url, title }) => {
     const li = document.createElement("li");
+
     const titleEl = document.createElement("strong");
-    titleEl.textContent = title;
+    titleEl.textContent = title || "Untitled Video";
     li.appendChild(titleEl);
+
     li.appendChild(document.createElement("br"));
+
     const link = document.createElement("a");
     link.href = url;
     link.textContent = url;
     link.target = "_blank";
     li.appendChild(link);
+
     queueList.appendChild(li);
-  }
+  });
 }
 
-skipButton?.addEventListener("click", () => {
-  chrome.storage.local.get(["queue"], (data) => {
-    const queue: string[] = data.queue || [];
-    if (queue.length <= 1) {
-      alert("No next video in queue!");
-      return;
-    }
+skipButton?.addEventListener("click", async () => {
+  chrome.storage.local.get(["queue"], async (data) => {
+    const queue: { url: string; title: string }[] = data.queue || [];
+
+    if (queue.length <= 1) return;
+
     const [, ...rest] = queue;
-    chrome.storage.local.set({ queue: rest }, async () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]?.id) {
-          chrome.tabs.update(tabs[0].id, { url: rest[0] });
-        }
-      });
-      await renderQueue(rest);
+
+    // Update tab first, then render
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+      if (activeTab?.id && rest[0]?.url) {
+        chrome.tabs.update(activeTab.id, { url: rest[0].url }, () => {
+          chrome.storage.local.set({ queue: rest }, () => {
+            renderQueue(rest);
+          });
+        });
+      }
     });
   });
 });
@@ -79,6 +82,6 @@ const getYouTubeTitle = async (url: string): Promise<string> => {
 
 // Render queue when popup opens
 chrome.storage.local.get(["queue"], async (data) => {
-  const queue: string[] = data.queue || [];
-  await renderQueue(queue);
+  const queue: { url: string; title: string }[] = data.queue || [];
+  renderQueue(queue);
 });

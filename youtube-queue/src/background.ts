@@ -1,26 +1,52 @@
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("YouTube Queue Extension installed");
-});
-
-chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-    id: "addToQueue",
-    title: "➕ Add to YouTube Queue",
+    id: "add-to-queue",
+    title: "Add to YouTube Queue",
     contexts: ["link"],
-    targetUrlPatterns: ["*://www.youtube.com/watch*"],
   });
 });
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === "addToQueue" && info.linkUrl) {
-    chrome.storage.local.get(["queue"], (data) => {
-      const queue: string[] = data.queue || [];
-      if (!queue.includes(info.linkUrl!)) {
-        const updatedQueue = [...queue, info.linkUrl!];
-        chrome.storage.local.set({ queue: updatedQueue }, () => {
-          console.log(`Added to queue: ${info.linkUrl}`);
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === "add-to-queue" && info.linkUrl?.includes("youtube.com/watch")) {
+    const url = info.linkUrl;
+
+    // Open the video in a *background tab* (not active)
+    chrome.tabs.create({ url, active: false }, (newTab) => {
+      if (!newTab?.id) return;
+
+      // Wait for YouTube to load enough to access the title
+      setTimeout(() => {
+        chrome.tabs.sendMessage(newTab.id!, { action: "getTitle" }, (response) => {
+          const title = response?.title || "Unknown Title";
+          console.log(`Adding to queue: ${title} (${url})`);
+          const newItem = { url, title };
+
+          chrome.storage.local.get(["queue"], (data) => {
+            const queue: { url: string; title: string }[] = data.queue || [];
+            if (queue.some((item) => item.url === url)) return;
+
+            const updatedQueue = [...queue, newItem];
+            chrome.storage.local.set({ queue: updatedQueue }, () => {
+              // Close the background tab after storing the title
+              chrome.tabs.remove(newTab.id!);
+            });
+          });
         });
-      }
+      }, 2000); // 2-second delay to let the YouTube page load
     });
   }
 });
+
+// Util to fetch the video title
+async function getYouTubeTitle(url: string): Promise<string> {
+  try {
+    const response = await fetch(url);
+    const html = await response.text();
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const title = doc.querySelector("title")?.innerText || "";
+    console.log(`Fetched title: ${title}`);
+    return title.replace(" - YouTube", "");
+  } catch {
+    return "Unknown Title";
+  }
+}
