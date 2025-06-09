@@ -4,33 +4,8 @@ const addButton = document.getElementById("add") as HTMLButtonElement;
 const clearButton = document.getElementById("clear") as HTMLButtonElement;
 const queueList = document.getElementById("queue") as HTMLUListElement;
 const skipButton = document.getElementById("skip") as HTMLButtonElement;
-const playPauseButton = document.getElementById("playPauseButton") as HTMLButtonElement;
-
-document.addEventListener("DOMContentLoaded", () => {
-  // check initial video state when popup opens
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const activeTab = tabs[0];
-    if (activeTab?.id) {
-      chrome.scripting
-        .executeScript({
-          target: { tabId: activeTab.id },
-          func: () => {
-            const video = document.querySelector("video");
-            return video ? !video.paused : false;
-          },
-        })
-        .then((results) => {
-          if (results && results[0]) {
-            const isPlaying = results[0].result;
-            updatePlayPauseButton(isPlaying ?? false);
-          }
-        })
-        .catch(() => {
-          updatePlayPauseButton(false);
-        });
-    }
-  });
-});
+const playButton = document.getElementById("playButton") as HTMLButtonElement;
+const pauseButton = document.getElementById("pauseButton") as HTMLButtonElement;
 
 addButton.onclick = async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -76,7 +51,7 @@ function renderQueue(queue: { url: string; title: string }[]) {
 skipButton?.addEventListener("click", async () => {
   chrome.storage.local.get(["queue"], async (data) => {
     const queue: { url: string; title: string }[] = data.queue || [];
-    if (queue.length <= 1) return;
+    if (queue.length <= 0) return;
 
     const [, ...rest] = queue;
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -92,6 +67,24 @@ skipButton?.addEventListener("click", async () => {
   });
 });
 
+playButton?.addEventListener("click", () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tabId = tabs[0]?.id;
+    if (!tabId) return;
+
+    chrome.tabs.sendMessage(tabId, { action: "playVideo" });
+  });
+});
+
+pauseButton?.addEventListener("click", () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tabId = tabs[0]?.id;
+    if (!tabId) return;
+
+    chrome.tabs.sendMessage(tabId, { action: "pauseVideo" });
+  });
+});
+
 const getYouTubeTitle = async (url: string): Promise<string> => {
   try {
     const response = await fetch(url);
@@ -104,70 +97,7 @@ const getYouTubeTitle = async (url: string): Promise<string> => {
   }
 };
 
-playPauseButton?.addEventListener("click", () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const activeTab = tabs[0];
-    if (activeTab?.id) {
-      chrome.scripting
-        .executeScript({
-          target: { tabId: activeTab.id },
-          func: () => {
-            const video = document.querySelector("video");
-            if (video) {
-              const wasPaused = video.paused;
-              video.paused ? video.play() : video.pause();
-              return !wasPaused;
-            }
-            return false;
-          },
-        })
-        .then((results) => {
-          if (results && results[0]) {
-            const isPlaying: boolean = results[0].result ?? false;
-            updatePlayPauseButton(isPlaying ?? false);
-          }
-        });
-    }
-  });
-});
-
-function updatePlayPauseButton(isPlaying: boolean) {
-  const playPauseButton = document.getElementById("playPauseButton") as HTMLButtonElement;
-  const playIcon = document.getElementById("playIcon") as HTMLSpanElement;
-  const playPauseText = document.getElementById("playPauseText") as HTMLSpanElement;
-
-  if (isPlaying) {
-    playPauseButton.classList.add("playing");
-    playIcon.className = "pause-icon";
-    playPauseText.textContent = "Paused";
-  } else {
-    playPauseButton.classList.remove("playing");
-    playIcon.className = "play-icon";
-    playPauseText.textContent = "Playing";
-  }
-}
-
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  const activeTab = tabs[0];
-  if (activeTab?.id) {
-    chrome.scripting
-      .executeScript({
-        target: { tabId: activeTab.id },
-        func: () => {
-          const video = document.querySelector("video");
-          return video ? !video.paused : false;
-        },
-      })
-      .then((results) => {
-        if (results && results[0]) {
-          const isPlaying = results[0].result;
-          updatePlayPauseButton(isPlaying ?? false);
-        }
-      });
-  }
-});
-
-// Render queue when popup opens
+// fix queue issue not showing when extension remains open
 chrome.storage.local.get(["queue"], async (data) => {
   const queue: { url: string; title: string }[] = data.queue || [];
   renderQueue(queue);

@@ -36,6 +36,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true;
 });
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const video = document.querySelector("video");
+  if (!video) return;
+  switch (message.action) {
+    case "playVideo":
+      video.play();
+      break;
+
+    case "pauseVideo":
+      video.pause();
+      break;
+  }
+  return true;
+});
+
 window.addEventListener("load", () => {
   setTimeout(checkIfVideoEnded, 1000);
 });
