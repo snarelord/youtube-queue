@@ -9,17 +9,16 @@
     <div class="container">
       <div class="buttons">
         <button class="addButton" id="add">Add to queue</button>
-        <button class="playPauseButton" id="playPauseButton">
-          <span class="play-icon" id="playIcon"></span>
-          <span id="playPauseText">Play</span>
-        </button>
         <button class="skipButton" id="skip">Skip</button>
         <button class="clearButton" id="clear">Clear</button>
+        <div class="playback-controls">
+          <button class="circular-button play-button" id="playButton" aria-label="Play"></button>
+          <button class="circular-button pause-button" id="pauseButton" aria-label="Pause"></button>
+        </div>
       </div>
-      <div class="queue" id="queue">
+      <div class="queue">
         <div class="queueTitle">Queue</div>
-        <div id="queue-items">
-          <!-- Queue items will be dynamically added here -->
+        <div id="queue">
           <div class="queue-empty" id="queue-empty">
             <span>No videos in queue</span>
             <small>Add videos to get started</small>

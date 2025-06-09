@@ -22,7 +22,6 @@ body {
   gap: 16px;
 }
 
-/* Button styles matching YouTube */
 .buttons {
   display: flex;
   flex-direction: column;
@@ -75,6 +74,139 @@ body {
   background-color: #aa0000;
 }
 
+/* Add/update these styles in your popup.css file */
+
+/* Circular button container */
+.playback-controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+/* Base styles for circular buttons */
+.circular-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #272727;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  color: white;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.circular-button:hover {
+  background-color: #3f3f3f;
+}
+
+.circular-button:active {
+  transform: scale(0.95);
+  background-color: #525252;
+}
+
+/* Play button - separate circle */
+.play-button {
+  background-color: #272727;
+}
+
+.play-button:hover {
+  background-color: #3f3f3f;
+}
+
+.play-button::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 12px solid white;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  margin-left: 3px; /* Center the triangle */
+}
+
+/* Pause button - separate circle */
+.pause-button {
+  background-color: #272727;
+}
+
+.pause-button:hover {
+  background-color: #3f3f3f;
+}
+
+.pause-button::before {
+  content: "";
+  width: 14px;
+  height: 16px;
+  background: linear-gradient(to right, white 0%, white 30%, transparent 30%, transparent 70%, white 70%, white 100%);
+}
+
+/* Keep your existing button styles for other buttons */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.action-buttons button {
+  flex: 1;
+}
+
+.addButton,
+.skipButton,
+.clearButton {
+  background-color: #272727;
+  border: none;
+  border-radius: 18px;
+  color: #ffffff;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+}
+
+.addButton:hover,
+.skipButton:hover,
+.clearButton:hover {
+  background-color: #3f3f3f;
+}
+
+.addButton:active,
+.skipButton:active,
+.clearButton:active {
+  background-color: #525252;
+}
+
+.addButton {
+  background-color: #cc0000;
+}
+
+.addButton:hover {
+  background-color: #ff0000;
+}
+
+.addButton:active {
+  background-color: #aa0000;
+}
+/* 
 .playPauseButton {
   background-color: #272727;
   border: none;
@@ -114,7 +246,6 @@ body {
   background-color: #aa0000;
 }
 
-/* Play/Pause icon */
 .play-icon,
 .pause-icon {
   width: 16px;
@@ -147,7 +278,7 @@ body {
     currentColor 100%
   );
   display: block;
-}
+} */
 
 /* Queue section */
 .queue {

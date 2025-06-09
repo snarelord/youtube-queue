@@ -13,7 +13,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     chrome.tabs.create({ url, active: false }, (newTab) => {
       if (!newTab?.id) return;
 
-      // Wait for YouTube to load enough to access the title
       setTimeout(() => {
         chrome.tabs.sendMessage(newTab.id!, { action: "getTitle" }, (response) => {
           const title = response?.title || "Unknown Title";
@@ -26,12 +25,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
             const updatedQueue = [...queue, newItem];
             chrome.storage.local.set({ queue: updatedQueue }, () => {
-              // Close the background tab after storing the title
               chrome.tabs.remove(newTab.id!);
             });
           });
         });
-      }, 2000); // 2-second delay to let the YouTube page load
+      }, 2000); // delay to allow YouTube to load
     });
   }
 });
