@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Queue",
+  "version": "1.0",
+  "description": "Restore YouTube's queue functionality",
+  "permissions": ["storage", "tabs", "scripting", "activeTab", "contextMenus"],
+  "host_permissions": ["*://www.youtube.com/*"],
+  "action": {
+    "default_popup": "src/popup.html"
+  },
+  "background": {
+    "service_worker": "assets/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/watch*"],
+      "js": ["assets/content.js"]
+    }
+  ]
+}
